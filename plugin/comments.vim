@@ -106,22 +106,22 @@ vnoremap <silent> <C-X> :call RangeUnCommentLine()<CR>
 
 " Link syntax with comment functions. {{{
 augroup commentsplugin
-  autocmd Syntax tex  noremap <silent> <C-C> :call Comments_TEXCommentLine ()<CR>
-  autocmd Syntax tex vnoremap <silent> <C-C> :call Comments_TEXRangeCommentLine ()<CR>
-  autocmd Syntax tex  noremap <silent> <C-X> :call Comments_TEXUnCommentLine ()<CR>
-  autocmd Syntax tex vnoremap <silent> <C-X> :call Comments_TEXRangeUnCommentLine ()<CR>
-  autocmd Syntax cpp,idl  noremap <silent> <C-C> :call Comments_CPPCommentLine ()<CR>
-  autocmd Syntax cpp,idl vnoremap <silent> <C-C> :call Comments_CPPRangeCommentLine ()<CR>
-  autocmd Syntax cpp,idl  noremap <silent> <C-X> :call Comments_CPPUnCommentLine ()<CR>
-  autocmd Syntax cpp,idl vnoremap <silent> <C-X> :call Comments_CPPRangeUnCommentLine ()<CR>
+  autocmd Syntax tex  noremap <silent> <C-C> :call Comments_CommentLine ('%')<CR>
+  autocmd Syntax tex vnoremap <silent> <C-C> :call Comments_RangeCommentLine ('%')<CR>
+  autocmd Syntax tex  noremap <silent> <C-X> :call Comments_UnCommentLine ('%')<CR>
+  autocmd Syntax tex vnoremap <silent> <C-X> :call Comments_RangeUnCommentLine ('%')<CR>
+  autocmd Syntax cpp,idl  noremap <silent> <C-C> :call Comments_CommentLine ("//")<CR>
+  autocmd Syntax cpp,idl vnoremap <silent> <C-C> :call Comments_RangeCommentLine ("//")<CR>
+  autocmd Syntax cpp,idl  noremap <silent> <C-X> :call Comments_UnCommentLine ("//")<CR>
+  autocmd Syntax cpp,idl vnoremap <silent> <C-X> :call Comments_RangeUnCommentLine ("//")<CR>
   autocmd Syntax c  noremap <silent> <C-C> :call Comments_CCommentLine ()<CR>
   autocmd Syntax c vnoremap <silent> <C-C> :call Comments_CRangeCommentLine ()<CR>
   autocmd Syntax c  noremap <silent> <C-X> :call Comments_CUnCommentLine ()<CR>
   autocmd Syntax c vnoremap <silent> <C-X> :call Comments_CRangeUnCommentLine ()<CR>
-  autocmd Syntax python,sh,cmake  noremap <silent> <C-C> :call Comments_CommentLine ()<CR>
-  autocmd Syntax python,sh,cmake vnoremap <silent> <C-C> :call Comments_RangeCommentLine ()<CR>
-  autocmd Syntax python,sh,cmake  noremap <silent> <C-X> :call Comments_UnCommentLine ()<CR>
-  autocmd Syntax python,sh,cmake vnoremap <silent> <C-X> :call Comments_RangeUnCommentLine ()<CR>
+  autocmd Syntax python,sh,cmake  noremap <silent> <C-C> :call Comments_CommentLine ("#")<CR>
+  autocmd Syntax python,sh,cmake vnoremap <silent> <C-C> :call Comments_RangeCommentLine ("#")<CR>
+  autocmd Syntax python,sh,cmake  noremap <silent> <C-X> :call Comments_UnCommentLine ("#")<CR>
+  autocmd Syntax python,sh,cmake vnoremap <silent> <C-X> :call Comments_RangeUnCommentLine ("#")<CR>
   autocmd Syntax html,xml  noremap <silent> <C-C> :call Comments_XMLCommentLine ()<CR>
   autocmd Syntax html,xml vnoremap <silent> <C-C> :call Comments_XMLRangeCommentLine ()<CR>
   autocmd Syntax html,xml  noremap <silent> <C-X> :call Comments_XMLUnCommentLine ()<CR>
@@ -400,36 +400,6 @@ function! Comments_CRangeCommentLine ()
 endfunction
 function! Comments_CRangeUnCommentLine ()
   execute ":silent! normal :nohlsearch\<CR>:s/\\/\\*//\<CR>:s/\\*\\///\<CR>:nohlsearch\<CR>=="
-endfunction
-" }}}
-
-" function for CPP-style {{{
-function! Comments_CPPCommentLine ()
-  execute ":silent! normal ^i//\<ESC>==\<down>^"
-endfunction
-function! Comments_CPPUnCommentLine ()
-  execute ":silent! normal :nohlsearch\<CR>:s/\\/\\///\<CR>:nohlsearch\<CR>=="
-endfunction
-function! Comments_CPPRangeCommentLine ()
-  execute ":silent! normal :s/\\S/\\/\\/\\0/\<CR>:nohlsearch<CR>=="
-endfunction
-function! Comments_CPPRangeUnCommentLine ()
-  execute ":silent! normal :s/\\/\\///\<CR>:nohlsearch\<CR>=="
-endfunction
-" }}}
-
-" function for TEX-style {{{
-function! Comments_TEXCommentLine ()
-  execute ":silent! normal ^i%\<ESC>==\<down>^"
-endfunction
-function! Comments_TEXUnCommentLine ()
-  execute ":silent! normal :nohlsearch\<CR>:s/%//\<CR>:nohlsearch\<CR>=="
-endfunction
-function! Comments_TEXRangeCommentLine ()
-  execute ":silent! normal :s/\\S/%\\0/\<CR>:nohlsearch<CR>=="
-endfunction
-function! Comments_TEXRangeUnCommentLine ()
-  execute ":silent! normal :s/%//\<CR>:nohlsearch\<CR>=="
 endfunction
 " }}}
 
