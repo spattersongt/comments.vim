@@ -465,3 +465,5 @@ function! Comments_XMLRangeUnCommentLine ()
   execute ":silent! normal :nohlsearch\<CR>:s/-->//\<CR>=="
 endfunction
 " }}}
+
+" vim: foldmethod=marker
