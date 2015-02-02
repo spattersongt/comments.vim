@@ -106,6 +106,10 @@ vnoremap <silent> <C-X> :call RangeUnCommentLine()<CR>
 
 " Link syntax with comment functions. {{{
 augroup commentsplugin
+  autocmd Syntax tex  noremap <silent> <C-C> :call Comments_TEXCommentLine ()<CR>
+  autocmd Syntax tex vnoremap <silent> <C-C> :call Comments_TEXRangeCommentLine ()<CR>
+  autocmd Syntax tex  noremap <silent> <C-X> :call Comments_TEXUnCommentLine ()<CR>
+  autocmd Syntax tex vnoremap <silent> <C-X> :call Comments_TEXRangeUnCommentLine ()<CR>
   autocmd Syntax cpp,idl  noremap <silent> <C-C> :call Comments_CPPCommentLine ()<CR>
   autocmd Syntax cpp,idl vnoremap <silent> <C-C> :call Comments_CPPRangeCommentLine ()<CR>
   autocmd Syntax cpp,idl  noremap <silent> <C-X> :call Comments_CPPUnCommentLine ()<CR>
@@ -411,6 +415,21 @@ function! Comments_CPPRangeCommentLine ()
 endfunction
 function! Comments_CPPRangeUnCommentLine ()
   execute ":silent! normal :s/\\/\\///\<CR>:nohlsearch\<CR>=="
+endfunction
+" }}}
+
+" function for TEX-style {{{
+function! Comments_TEXCommentLine ()
+  execute ":silent! normal ^i%\<ESC>==\<down>^"
+endfunction
+function! Comments_TEXUnCommentLine ()
+  execute ":silent! normal :nohlsearch\<CR>:s/%//\<CR>:nohlsearch\<CR>=="
+endfunction
+function! Comments_TEXRangeCommentLine ()
+  execute ":silent! normal :s/\\S/%\\0/\<CR>:nohlsearch<CR>=="
+endfunction
+function! Comments_TEXRangeUnCommentLine ()
+  execute ":silent! normal :s/%//\<CR>:nohlsearch\<CR>=="
 endfunction
 " }}}
 
