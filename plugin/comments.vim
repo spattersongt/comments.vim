@@ -92,6 +92,7 @@ endif
 
 let loaded_comments_plugin="v2.10"
 
+" Keep old version of the plugind for unsupported file extensions. {{{
 " key-mappings for comment line in normal mode
 noremap  <silent> <C-C> :call CommentLine()<CR>
 " key-mappings for range comment lines in visual <Shift-V> mode
@@ -101,8 +102,30 @@ vnoremap <silent> <C-C> :call RangeCommentLine()<CR>
 noremap  <silent> <C-X> :call UnCommentLine()<CR>
 " key-mappings for range un-comment lines in visual <Shift-V> mode
 vnoremap <silent> <C-X> :call RangeUnCommentLine()<CR>
+" }}}
 
-" function to comment line in normal mode
+" Link syntax with comment functions. {{{
+augroup commentsplugin
+  autocmd Syntax cpp,idl  noremap <silent> <C-C> :call Comments_CPPCommentLine ()<CR>
+  autocmd Syntax cpp,idl vnoremap <silent> <C-C> :call Comments_CPPRangeCommentLine ()<CR>
+  autocmd Syntax cpp,idl  noremap <silent> <C-X> :call Comments_CPPUnCommentLine ()<CR>
+  autocmd Syntax cpp,idl vnoremap <silent> <C-X> :call Comments_CPPRangeUnCommentLine ()<CR>
+  autocmd Syntax c  noremap <silent> <C-C> :call Comments_CCommentLine ()<CR>
+  autocmd Syntax c vnoremap <silent> <C-C> :call Comments_CRangeCommentLine ()<CR>
+  autocmd Syntax c  noremap <silent> <C-X> :call Comments_CUnCommentLine ()<CR>
+  autocmd Syntax c vnoremap <silent> <C-X> :call Comments_CRangeUnCommentLine ()<CR>
+  autocmd Syntax python,sh,cmake  noremap <silent> <C-C> :call Comments_CommentLine ()<CR>
+  autocmd Syntax python,sh,cmake vnoremap <silent> <C-C> :call Comments_RangeCommentLine ()<CR>
+  autocmd Syntax python,sh,cmake  noremap <silent> <C-X> :call Comments_UnCommentLine ()<CR>
+  autocmd Syntax python,sh,cmake vnoremap <silent> <C-X> :call Comments_RangeUnCommentLine ()<CR>
+  autocmd Syntax html,xml  noremap <silent> <C-C> :call Comments_XMLCommentLine ()<CR>
+  autocmd Syntax html,xml vnoremap <silent> <C-C> :call Comments_XMLRangeCommentLine ()<CR>
+  autocmd Syntax html,xml  noremap <silent> <C-X> :call Comments_XMLUnCommentLine ()<CR>
+  autocmd Syntax html,xml vnoremap <silent> <C-X> :call Comments_XMLRangeUnCommentLine ()<CR>
+augroup END
+" }}}
+
+" function to comment line in normal mode {{{
 function! CommentLine()
   let file_name = buffer_name("%")
 
@@ -320,4 +343,106 @@ function! RangeUnCommentLine()
     execute ":silent! normal :s/\\#//\<CR>:nohlsearch\<CR>"
   endif
 endfunction
+" }}}
 
+" functions for unknow syntax type {{{
+function! Comments_CommentLine()
+  execute ":silent! normal ^i#\<ESC>\<down>^"
+endfunction
+function! Comments_UnCommentLine()
+  execute ":silent! normal :nohlsearch\<CR>:s/\\#//\<CR>:nohlsearch\<CR>"
+endfunction
+function! Comments_RangeCommentLine()
+  execute ":silent! normal :s/\\S/\\#\\0/\<CR>:nohlsearch<CR>"
+endfunction
+function! Comments_RangeUnCommentLine()
+  execute ":silent! normal :s/\\#//\<CR>:nohlsearch\<CR>"
+endfunction
+" }}}
+
+" function for C-style {{{
+function! Comments_CCommentLine ()
+  " if there are previous comments on this line ie /* ... */
+  if stridx(getline("."), "\/\*") != -1 && stridx(getline("."), "\*\/") != -1
+    execute ":silent! normal :nohlsearch\<CR>:s/\\([^\\/\\*]*\\)\\(\\/\\*.*\\*\\/\\)/\\1\\*\\/\\2/\<CR>:s/\\([^[:blank:]]\\+\\)/\\/\\*\\1/\<CR>:nohlsearch\<CR>=="
+    " if there is a /* but no */ like line 1 in Issue A above
+  elseif stridx(getline("."), "\/\*") != -1 && stridx(getline("."), "\*\/") == -1
+    execute ":silent! normal :nohlsearch\<CR>:s/\\(.*\\)\\(\\/\\*.*$\\)/\\/\\*\\1\\*\\/\\2\\*\\//\<CR>:nohlsearch\<CR>=="
+    " if there is a */ but no /* like line 5 in Issue A above
+  elseif stridx(getline("."), "\/\*") == -1 && stridx(getline("."), "\*\/") != -1
+    execute ":silent! normal :nohlsearch\<CR>:s/\\(.*\\*\\/\\)/\\/\\*\\1/\<CR>:nohlsearch\<CR>=="
+    " if there are no comments on this line
+  elseif stridx(getline("."), "\/\*") == -1 && stridx(getline("."), "\*\/") == -1
+    execute ":silent! normal ^i/*\<ESC>$a*/\<ESC>==\<down>^"
+  endif
+endfunction
+function! Comments_CUnCommentLine ()
+  execute ":silent! normal :nohlsearch\<CR>:s/\\/\\*//\<CR>:s/\\*\\///\<CR>:nohlsearch\<CR>=="
+endfunction
+function! Comments_CRangeCommentLine ()
+  " if there are previous comments on this line ie /* ... */
+  if stridx(getline("."), "\/\*") != -1 && stridx(getline("."), "\*\/") != -1
+    execute ":silent! normal :nohlsearch\<CR>:s/\\([^\\/\\*]*\\)\\(\\/\\*.*\\*\\/\\)/\\1\\*\\/\\2/\<CR>:s/\\([^[:blank:]]\\+\\)/\\/\\*\\1/\<CR>:nohlsearch\<CR>=="
+    " if there is a /* but no */ like line 1 in Issue A above
+  elseif stridx(getline("."), "\/\*") != -1 && stridx(getline("."), "\*\/") == -1
+    execute ":silent! normal :nohlsearch\<CR>:s/\\(.*\\)\\(\\/\\*.*$\\)/\\/\\*\\1\\*\\/\\2\\*\\//\<CR>:nohlsearch\<CR>=="
+    " if there is a */ but no /* like line 5 in Issue A above
+  elseif stridx(getline("."), "\/\*") == -1 && stridx(getline("."), "\*\/") != -1
+    execute ":silent! normal :nohlsearch\<CR>:s/\\(.*\\*\\/\\)/\\/\\*\\1/\<CR>:nohlsearch\<CR>=="
+    " if there are no comments on this line
+  elseif stridx(getline("."), "\/\*") == -1 && stridx(getline("."), "\*\/") == -1
+    execute ":silent! normal :s/\\(\\S.*$\\)/\\/\\*\\1\\*\\//\<CR>:nohlsearch\<CR>=="
+  endif
+endfunction
+function! Comments_CRangeUnCommentLine ()
+  execute ":silent! normal :nohlsearch\<CR>:s/\\/\\*//\<CR>:s/\\*\\///\<CR>:nohlsearch\<CR>=="
+endfunction
+" }}}
+
+" function for CPP-style {{{
+function! Comments_CPPCommentLine ()
+  execute ":silent! normal ^i//\<ESC>==\<down>^"
+endfunction
+function! Comments_CPPUnCommentLine ()
+  execute ":silent! normal :nohlsearch\<CR>:s/\\/\\///\<CR>:nohlsearch\<CR>=="
+endfunction
+function! Comments_CPPRangeCommentLine ()
+  execute ":silent! normal :s/\\S/\\/\\/\\0/\<CR>:nohlsearch<CR>=="
+endfunction
+function! Comments_CPPRangeUnCommentLine ()
+  execute ":silent! normal :s/\\/\\///\<CR>:nohlsearch\<CR>=="
+endfunction
+" }}}
+
+" functions for XML style {{{
+function! Comments_XMLCommentLine ()
+  if stridx( getline("."), "\<!--" ) != -1 && stridx( getline("."), "--\>" ) != -1
+  elseif stridx( getline("."), "\<!--" ) != -1 && stridx( getline("."), "--\>" ) == -1
+    "  open, but a close "
+    execute ":silent! normal ^A--\>\<ESC>==\<down>^"
+  elseif stridx( getline("."), "\<!--" ) == -1 && stridx( getline("."), "--\>" ) != -1
+    execute ":silent! normal ^i\<\!--\<ESC>==\<down>^"
+  elseif stridx( getline("."), "\<!--" ) == -1 && stridx( getline("."), "--\>" ) == -1
+    execute ":silent! normal ^i\<\!--\<ESC>$a--\>\<ESC>==\<down>^"
+  endif
+endfunction
+function! Comments_XMLUnCommentLine ()
+  execute ":silent! normal :nohlsearch\<CR>:s/<!--//\<CR>=="
+  execute ":silent! normal :nohlsearch\<CR>:s/-->//\<CR>=="
+endfunction
+function! Comments_XMLRangeCommentLine ()
+  if stridx( getline("."), "\<!--" ) != -1 && stridx( getline("."), "--\>" ) != -1
+  elseif stridx( getline("."), "\<!--" ) != -1 && stridx( getline("."), "--\>" ) == -1
+    "  open, but a close "
+    execute ":silent! normal ^A--\>\<ESC>==\<down>^"
+  elseif stridx( getline("."), "\<!--" ) == -1 && stridx( getline("."), "--\>" ) != -1
+    execute ":silent! normal ^i\<\!--\<ESC>==\<down>^"
+  elseif stridx( getline("."), "\<!--" ) == -1 && stridx( getline("."), "--\>" ) == -1
+    execute ":silent! normal ^i\<\!--\<ESC>$a--\>\<ESC>==\<down>^"
+  endif
+endfunction
+function! Comments_XMLRangeUnCommentLine ()
+  execute ":silent! normal :nohlsearch\<CR>:s/<!--//\<CR>=="
+  execute ":silent! normal :nohlsearch\<CR>:s/-->//\<CR>=="
+endfunction
+" }}}
