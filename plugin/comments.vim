@@ -326,6 +326,7 @@ endfunction
 " functions for unknow syntax type {{{
 function! Comments_CommentLine(style)
   call setline ('.', substitute (getline ('.'), "\\S", a:style." \\0", ""))
+  normal! j
 endfunction
 function! Comments_UnCommentLine(style)
   call setline ('.', substitute (getline ('.'), a:style." \\?", "", ""))
