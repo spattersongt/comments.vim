@@ -106,6 +106,10 @@ vnoremap <silent> <C-X> :call RangeUnCommentLine()<CR>
 
 " Link syntax with comment functions. {{{
 augroup commentsplugin
+  autocmd Syntax vim  noremap <silent> <C-C> :call Comments_CommentLine ('"')<CR>
+  autocmd Syntax vim vnoremap <silent> <C-C> :call Comments_RangeCommentLine ('"')<CR>
+  autocmd Syntax vim  noremap <silent> <C-X> :call Comments_UnCommentLine ('"')<CR>
+  autocmd Syntax vim vnoremap <silent> <C-X> :call Comments_RangeUnCommentLine ('"')<CR>
   autocmd Syntax tex  noremap <silent> <C-C> :call Comments_CommentLine ('%')<CR>
   autocmd Syntax tex vnoremap <silent> <C-C> :call Comments_RangeCommentLine ('%')<CR>
   autocmd Syntax tex  noremap <silent> <C-X> :call Comments_UnCommentLine ('%')<CR>
