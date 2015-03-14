@@ -114,10 +114,10 @@ augroup commentsplugin
   autocmd Syntax tex vnoremap <silent> <C-C> :call Comments_RangeCommentLine ('%')<CR>
   autocmd Syntax tex  noremap <silent> <C-X> :call Comments_UnCommentLine ('%')<CR>
   autocmd Syntax tex vnoremap <silent> <C-X> :call Comments_RangeUnCommentLine ('%')<CR>
-  autocmd Syntax javascript,cpp,idl  noremap <silent> <C-C> :call Comments_CommentLine ("//")<CR>
-  autocmd Syntax javascript,cpp,idl vnoremap <silent> <C-C> :call Comments_RangeCommentLine ("//")<CR>
-  autocmd Syntax javascript,cpp,idl  noremap <silent> <C-X> :call Comments_UnCommentLine ("//")<CR>
-  autocmd Syntax javascript,cpp,idl vnoremap <silent> <C-X> :call Comments_RangeUnCommentLine ("//")<CR>
+  autocmd Syntax javascript,cpp,idl,go  noremap <silent> <C-C> :call Comments_CommentLine ("//")<CR>
+  autocmd Syntax javascript,cpp,idl,go vnoremap <silent> <C-C> :call Comments_RangeCommentLine ("//")<CR>
+  autocmd Syntax javascript,cpp,idl,go  noremap <silent> <C-X> :call Comments_UnCommentLine ("//")<CR>
+  autocmd Syntax javascript,cpp,idl,go vnoremap <silent> <C-X> :call Comments_RangeUnCommentLine ("//")<CR>
   autocmd Syntax c  noremap <silent> <C-C> :call Comments_CCommentLine ()<CR>
   autocmd Syntax c vnoremap <silent> <C-C> :call Comments_CRangeCommentLine ()<CR>
   autocmd Syntax c  noremap <silent> <C-X> :call Comments_CUnCommentLine ()<CR>
